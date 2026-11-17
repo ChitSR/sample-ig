@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StructureDefinition xmlns="http://hl7.org/fhir">
+  <id value="my-patient"/>
+  <url value="http://draft.hl7.org.au/fhir/sample/StructureDefinition/my-patient"/>
+  <name value="MyPatient"/>
+  <title value="My Patient"/>
+  <status value="draft"/>
+  <experimental value="true"/>
+  <description value="A Patient profile derived from AU Core Patient that requires an IHI and at least one contact, with all contacts limited to email or mobile phone."/>
+  <fhirVersion value="4.0.1"/>
+  <kind value="resource"/>
+  <abstract value="false"/>
+  <type value="Patient"/>
+  <baseDefinition value="http://hl7.org.au/fhir/core/StructureDefinition/au-core-patient"/>
+  <derivation value="constraint"/>
+  <differential>
+    <!-- Steps 2.2 to 2.5 go here -->
+    <!--CS Step 2.2-->
+    <element id="Patient.identifier:ihi">
+      <path value="Patient.identifier"/>
+      <sliceName value="ihi"/>
+      <min value="1"/>
+    </element>
+      <!--CS Step 2.3
+    <element id="Patient.telecom">
+      <path value="Patient.telecom"/>
+      <min value="1"/>
+    </element> -->
+    <!--CS Step 2.4-->
+    <element id="Patient.telecom">
+      <path value="Patient.telecom"/>
+      <min value="1"/>
+      <constraint>
+        <key value="my-pat-01"/>
+        <severity value="error"/>
+        <human value="Each telecom entry shall be an email address or a mobile phone number"/>
+        <expression value="system = 'email' or (system = 'phone' and use = 'mobile')"/>
+        <source value="http://draft.hl7.org.au/fhir/sample/StructureDefinition/my-patient"/>
+      </constraint>
+    </element>
+   <!--CS Step 2.5-->
+  <element id="Patient.generalPractitioner">
+    <path value="Patient.generalPractitioner"/>
+    <type>
+      <code value="Reference"/>
+      <targetProfile value="http://hl7.org.au/fhir/core/StructureDefinition/au-core-practitioner"/>
+      <targetProfile value="http://hl7.org.au/fhir/core/StructureDefinition/au-core-practitionerrole"/>
+    </type>
+    <mustSupport value="true"/>
+  </element>
+  </differential>
+</StructureDefinition>
